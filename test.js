@@ -21,17 +21,12 @@ describe('ticket on sale scraper', () => {
   let salesListHtml
   let events
   it('should login to stublr', done => {
-    osmosis
-      .get('http://www.ticketonsalelist.com/')
-      .login(USERNAME, PASSWORD)
-      .then((context, data, next) => {
-        let {request:{headers}} = context
-        expect(headers).to.not.be.undefined
-        loginHeaders = headers
-        done()
-      })
-      .log(console.log)
-      .error(console.log)
+    loginToStublr()
+    .then(headers => {
+      expect(headers).to.not.be.undefined
+      loginHeaders = headers
+      done()
+    })
   })
   it('should get on sale list', done => {
     getSalesList(loginHeaders)
@@ -46,7 +41,6 @@ describe('ticket on sale scraper', () => {
     parseSalesPage(salesListHtml)
     .then(res => {
       expect(res).to.be.an('array')
-      console.log(res)
       events = res
       done()
     })

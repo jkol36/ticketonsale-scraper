@@ -1,14 +1,25 @@
 import agent from 'superagent-bluebird-promise'
-import { headers, onSaleRef } from './config'
+import osmosis from 'osmosis'
+import { 
+  headers, 
+  onSaleRef,
+  USERNAME,
+  PASSWORD
+} from './config'
 
 
-export const loginToStublr = (username, password, headers) => {
-  return agent
-          .post('http://stublr')
-          .set(headers)
-          .send({username, password})
-          .then(res => res)
-          .catch(err => err)
+export const loginToTicketOnSale = (username, password, headers) => {
+  return new Promise((resolve, reject) => {
+    osmosis
+      .get('http://www.ticketonsalelist.com/')
+      .login(USERNAME, PASSWORD)
+      .then((context, data, next) => {
+        let {request:{headers}} = context
+        resolve(headers)
+      })
+      .log(console.log)
+      .error(err => reject(err))
+  })
 }
 
 export const getLoginHeaders = () => {
